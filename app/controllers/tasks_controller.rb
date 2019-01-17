@@ -1,11 +1,12 @@
 class TasksController < ApplicationController
   
+  before_action :self_find, only: [:show,:edit,:update,:destroy]
+  
   def index
     @tasks=Task.all
   end
   
   def show
-    @task=Task.find(params[:id])
   end
   
   def new
@@ -22,11 +23,9 @@ class TasksController < ApplicationController
   end
   
   def edit
-    @task=Task.find(params[:id])
   end
   
   def update
-    @task=Task.find(params[:id])
     if @task.update(task_params)
       redirect_to tasks_url
     else
@@ -35,14 +34,17 @@ class TasksController < ApplicationController
   end
   
   def destroy
-    @task=Task.find(params[:id])
     @task.destroy
     redirect_to tasks_url
   end
 
   private
   
+  def self_find
+    @task=Task.find(params[:id])
+  end
+  
   def task_params
-    params.require(:task).permit(:content)
+    params.require(:task).permit(:content, :status)
   end
 end
